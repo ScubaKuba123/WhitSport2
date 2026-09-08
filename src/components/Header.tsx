@@ -9,9 +9,9 @@ export default function Header({ onAdmin }: { onAdmin: () => void }) {
       <div className="bg-zinc-900 text-white text-xs text-center py-2 px-2">
         Sprzedaż prowadzona wyłącznie online. Nie prowadzimy sklepu stacjonarnego.
       </div>
-      {/* top thin shipping bar info */}
-      <div className="bg-amber-50 border-b border-amber-200 text-amber-900 text-sm text-center py-2 px-3">
-        {shippingBar}
+      {/* top thin shipping bar info - colorful */}
+      <div className="bg-gradient-to-r from-amber-100 via-brand-light to-teal-50 border-b border-amber-200 text-zinc-800 text-sm text-center py-2.5 px-3 flex items-center justify-center gap-2">
+        <span className="hidden sm:inline">🚚</span> {shippingBar} <span className="hidden sm:inline text-brand font-semibold">• IRR • Pasamon • ITW Nexus</span>
       </div>
       {/* main bar */}
       <div className="border-b border-zinc-200">

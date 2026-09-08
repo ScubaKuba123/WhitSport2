@@ -6,9 +6,7 @@ import Jalousie from "./components/Jalousie";
 import { useStore } from "./context/StoreContext";
 import type { Announcement, Category, Product } from "./types";
 
-function Badge({ children }: { children: string }) {
-  return <span className="text-xs bg-zinc-900 text-white px-2 py-1 rounded-full">{children}</span>;
-}
+
 
 function CategorySidebar({ selected, onSelect }: { selected: string | null; onSelect: (id: string | null) => void }) {
   const { categories, products } = useStore();
@@ -40,6 +38,21 @@ function CategorySidebar({ selected, onSelect }: { selected: string | null; onSe
   );
 }
 
+function statusStyle(s: string) {
+  if (s === "in_stock") return "bg-emerald-600 text-white";
+  if (s === "low_stock") return "bg-amber-500 text-white";
+  if (s === "made_to_order") return "bg-sky-600 text-white";
+  return "bg-zinc-800 text-white";
+}
+function camoDot(camo?: string) {
+  if (!camo) return "bg-zinc-200";
+  if (camo.includes("Ranger")) return "bg-[#3f4f3a]";
+  if (camo.includes("Coyote")) return "bg-[#8b5a2b]";
+  if (camo.includes("Pantera")) return "bg-[#4a5d3a]";
+  if (camo.includes("MultiCam")) return "bg-[#7a6a4b]";
+  if (camo.includes("Czarny")) return "bg-black";
+  return "bg-zinc-400";
+}
 function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
   const statusMap: Record<string, string> = {
     in_stock: "W magazynie",
@@ -48,15 +61,22 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
     out_of_stock: "Do wyczerpania",
   };
   return (
-    <div className="border rounded-2xl overflow-hidden bg-white flex flex-col">
-      <img src={p.image} alt={p.name} className="h-56 w-full object-cover" />
+    <div className="border rounded-2xl overflow-hidden bg-white flex flex-col hover:shadow-lg transition group">
+      <div className="relative">
+        <img src={p.image} alt={p.name} className="h-56 w-full object-cover group-hover:scale-[1.02] transition" />
+        <div className="absolute top-2 left-2 flex gap-1">
+          <span className={`text-[11px] px-2 py-1 rounded-full font-medium ${statusStyle(p.status)}`}>{statusMap[p.status]}</span>
+          {p.oldPrice && <span className="text-[11px] bg-red-600 text-white px-2 py-1 rounded-full font-bold">PROMO</span>}
+        </div>
+        <div className="absolute bottom-2 right-2 w-3 h-3 rounded-full border-2 border-white shadow" style={{ background: p.camo?.includes("Ranger") ? "#3f4f3a" : p.camo?.includes("Coyote") ? "#8b5a2b" : p.camo?.includes("Pantera") ? "#4a5d3a" : p.camo?.includes("MultiCam") ? "#7a6a4b" : p.camo?.includes("Czarny") ? "#111" : "#0e7a5a" }} title={p.camo} />
+      </div>
       <div className="p-3 flex-1 flex flex-col gap-2">
-        <div className="text-xs text-zinc-500">{p.camo} • {p.fabric}</div>
-        <div className="font-semibold leading-tight">{p.name}</div>
-        <div className="text-xs"><Badge>{statusMap[p.status]}</Badge> <span className="ml-2 text-zinc-500">stan: {p.stock}</span></div>
+        <div className="text-xs text-zinc-500 flex items-center gap-1"><span className={`w-2 h-2 rounded-full ${camoDot(p.camo)}`} />{p.camo} • {p.fabric}</div>
+        <div className="font-semibold leading-tight line-clamp-2">{p.name}</div>
+        <div className="text-xs text-zinc-500">stan: {p.stock} • {p.fabric?.includes("IRR") ? "IRR ✓" : ""}</div>
         <div className="mt-auto flex items-center justify-between">
-          <div className="font-bold">{p.price} zł {p.oldPrice && <span className="line-through text-zinc-400 text-sm ml-1">{p.oldPrice} zł</span>}</div>
-          <button onClick={onAdd} className="bg-brand text-white px-4 py-2 rounded-full text-sm hover:bg-brand-dark">Do koszyka</button>
+          <div className="font-bold text-brand">{p.price} zł {p.oldPrice && <span className="line-through text-zinc-400 text-sm ml-1">{p.oldPrice} zł</span>}</div>
+          <button onClick={onAdd} className="bg-brand text-white px-4 py-2 rounded-full text-sm hover:bg-brand-dark shadow">Do koszyka</button>
         </div>
       </div>
     </div>
@@ -161,12 +181,150 @@ function AdminPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
+function CamoWall({ products, onAdd }: { products: Product[]; onAdd: (id: string) => void }) {
+  const camos = ["Ranger Green IRR", "Wz.93 Pantera IRR", "MultiCam IRR", "Coyote Brown", "Czarny"];
+  const [filter, setFilter] = useState<string | null>(null);
+  const filtered = filter ? products.filter(p => p.camo === filter) : products;
+  const swatches: Record<string, string> = {
+    "Ranger Green IRR": "bg-[#3f4f3a]",
+    "Wz.93 Pantera IRR": "bg-[#4a5d3a] bg-[radial-gradient(circle_at_20%_30%,#5a724b_0_18%,transparent_18%),radial-gradient(circle_at_70%_70%,#2f3d26_0_14%,transparent_14%)]",
+    "MultiCam IRR": "bg-[#7a6a4b] bg-[linear-gradient(45deg,#6b5a3a_25%,transparent_25%)]",
+    "Coyote Brown": "bg-[#8b5a2b]",
+    "Czarny": "bg-zinc-900",
+  };
+  return (
+    <div>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+        {camos.map(c => (
+          <button key={c} onClick={() => setFilter(filter === c ? null : c)} className={`h-24 rounded-2xl border-2 flex flex-col items-center justify-center gap-1 text-sm font-semibold shadow-sm hover:scale-[1.02] transition ${filter === c ? "ring-2 ring-brand border-brand" : "border-zinc-200"} ${swatches[c]} ${c === "Czarny" ? "text-white" : c === "Coyote Brown" ? "text-white" : "text-white"}`}>
+            <span className="drop-shadow">{c}</span><span className="text-xs font-normal opacity-80">{products.filter(p => p.camo === c).length} prod.</span>
+          </button>
+        ))}
+      </div>
+      <div className="flex gap-2 mb-3">
+        <button onClick={() => setFilter(null)} className={`px-3 py-1 rounded-full text-xs border ${!filter ? "bg-zinc-900 text-white" : "bg-white"}`}>Wszystkie kamuflaże</button>
+        {filter && <span className="text-sm text-zinc-600">Filtr: <b>{filter}</b> — {filtered.length} produktów</span>}
+      </div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => onAdd(p.id)} />)}
+      </div>
+    </div>
+  );
+}
+
+function QuizFinder({ products, onAdd }: { products: Product[]; onAdd: (id: string) => void }) {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<{ use?: string; color?: string; need?: string }>({});
+  const filtered = products.filter(p => {
+    if (answers.color && p.camo !== answers.color) return false;
+    if (answers.need) {
+      if (answers.need === "pas" && p.subcategoryId !== "pasy") return false;
+      if (answers.need === "kieszen" && p.categoryId !== "oporazdzenie") return false;
+      if (answers.need === "panel" && p.subcategoryId !== "panele") return false;
+    }
+    return true;
+  });
+  if (step === 3) {
+    return (
+      <div>
+        <div className="bg-gradient-to-r from-brand to-teal-600 text-white rounded-2xl p-4 mb-4">
+          <div className="font-bold">Polecane dla Ciebie — {filtered.length} produktów</div>
+          <div className="text-sm opacity-80">Na podstawie: {answers.use} • {answers.color || "dowolny kolor"} • {answers.need || "wszystko"}</div>
+          <button onClick={() => { setStep(0); setAnswers({}); }} className="mt-2 bg-white text-brand px-3 py-1 rounded-full text-sm">Zacznij od nowa</button>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => onAdd(p.id)} />)}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="bg-white border rounded-2xl p-6">
+      <div className="text-xs text-zinc-500 mb-1">Krok {step + 1}/3 — Pomagamy wybrać</div>
+      <div className="w-full bg-zinc-100 h-2 rounded-full mb-4"><div className="bg-brand h-2 rounded-full transition-all" style={{ width: `${((step + 1) / 3) * 100}%` }} /></div>
+      {step === 0 && (
+        <div>
+          <div className="font-bold text-lg mb-3">Co planujesz?</div>
+          <div className="grid md:grid-cols-2 gap-3">
+            {[
+              { id: "strzelnica", label: "Strzelnica / Służba", desc: "Pas bojowy, ładownice", color: "bg-emerald-50 border-emerald-200" },
+              { id: "edc", label: "EDC na co dzień", desc: "Lekkie, kompaktowe", color: "bg-sky-50 border-sky-200" },
+              { id: "outdoor", label: "Outdoor / Bushcraft", desc: "Wytrzymałe, IRR", color: "bg-amber-50 border-amber-200" },
+              { id: "sport", label: "Bicze sportowe", desc: "Hybrydowe Paracord", color: "bg-zinc-50 border-zinc-200" },
+            ].map(o => (
+              <button key={o.id} onClick={() => { setAnswers({ ...answers, use: o.id }); setStep(1); }} className={`border-2 rounded-2xl p-4 text-left hover:scale-[1.02] transition ${o.color}`}>
+                <div className="font-semibold">{o.label}</div><div className="text-xs text-zinc-600">{o.desc}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {step === 1 && (
+        <div>
+          <div className="font-bold text-lg mb-3">Jaki kolor/kamuflaż?</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {["Ranger Green IRR", "Wz.93 Pantera IRR", "MultiCam IRR", "Coyote Brown", "Czarny", ""].map(c => (
+              <button key={c || "any"} onClick={() => { setAnswers({ ...answers, color: c || undefined }); setStep(2); }} className={`h-20 rounded-xl border-2 flex items-center justify-center font-semibold ${!c ? "bg-white" : c.includes("Ranger") ? "bg-[#3f4f3a] text-white" : c.includes("Pantera") ? "bg-[#4a5d3a] text-white" : c.includes("MultiCam") ? "bg-[#7a6a4b] text-white" : c.includes("Coyote") ? "bg-[#8b5a2b] text-white" : "bg-zinc-900 text-white"}`}>
+                {c || "Dowolny"}
+              </button>
+            ))}
+          </div>
+          <button onClick={() => setStep(0)} className="mt-3 text-sm underline">Wstecz</button>
+        </div>
+      )}
+      {step === 2 && (
+        <div>
+          <div className="font-bold text-lg mb-3">Czego potrzebujesz?</div>
+          <div className="grid md:grid-cols-3 gap-3">
+            {[
+              { id: "pas", label: "Pas taktyczny" },
+              { id: "kieszen", label: "Kieszeń / Ładownica" },
+              { id: "panel", label: "Panel / Dodatki" },
+            ].map(o => (
+              <button key={o.id} onClick={() => { setAnswers({ ...answers, need: o.id }); setStep(3); }} className="border-2 rounded-2xl p-6 text-center hover:bg-brand-light hover:border-brand transition">
+                <div className="font-semibold">{o.label}</div>
+              </button>
+            ))}
+            <button onClick={() => { setAnswers({ ...answers, need: undefined }); setStep(3); }} className="border-2 border-dashed rounded-2xl p-6 text-center">Pokaż wszystko</button>
+          </div>
+          <button onClick={() => setStep(1)} className="mt-3 text-sm underline">Wstecz</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function KitsView({ products, onAdd }: { products: Product[]; onAdd: (id: string) => void }) {
+  const kits = [
+    { title: "Zestaw Battle Belt Start", desc: "Pas + 2 ładownice + panel", filter: (p: Product) => ["p_belt", "p_cargo", "p_panel"].includes(p.id), color: "from-emerald-500 to-teal-600" },
+    { title: "Do wyczerpania", desc: "Ostatnie sztuki z Mirandy", filter: (p: Product) => p.status === "low_stock" || p.status === "out_of_stock", color: "from-amber-500 to-orange-600" },
+    { title: "Promocje", desc: "Obniżki i okazje", filter: (p: Product) => !!p.oldPrice, color: "from-red-500 to-pink-600" },
+    { title: "Szyte na zamówienie", desc: "Realizacja 1–2 dni", filter: (p: Product) => p.status === "made_to_order", color: "from-sky-500 to-blue-600" },
+  ];
+  const [sel, setSel] = useState(0);
+  const filtered = products.filter(kits[sel].filter);
+  return (
+    <div>
+      <div className="grid md:grid-cols-4 gap-3 mb-4">
+        {kits.map((k, i) => (
+          <button key={k.title} onClick={() => setSel(i)} className={`rounded-2xl p-4 text-left text-white bg-gradient-to-br ${k.color} ${sel === i ? "ring-2 ring-zinc-900 scale-[1.02]" : "opacity-90 hover:opacity-100"} transition shadow`}>
+            <div className="font-bold text-sm">{k.title}</div><div className="text-xs opacity-80">{k.desc}</div><div className="text-xs mt-1 bg-white/20 inline-block px-2 py-0.5 rounded-full">{products.filter(k.filter).length} prod.</div>
+          </button>
+        ))}
+      </div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.length ? filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => onAdd(p.id)} />) : <div className="text-sm text-zinc-500 col-span-3 text-center py-8">Brak produktów w tym zestawie</div>}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const { announcements, products, categories, addToCart, cart } = useStore();
   const [cat, setCat] = useState<string | null>(null);
   const [admin, setAdmin] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [view, setView] = useState<"carousel" | "jalousie">("jalousie");
+  const [view, setView] = useState<"carousel" | "jalousie" | "quiz" | "camo" | "kits">("jalousie");
   const filtered = cat ? products.filter(p => p.categoryId === cat) : products;
   const cartTotal = cart.reduce((s, ci) => {
     const p = products.find(x => x.id === ci.productId);
@@ -191,16 +349,26 @@ export default function App() {
           </div>
         </section>
 
-        {/* view toggle */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="text-sm text-zinc-600">Widok:</div>
-          <button onClick={() => setView("carousel")} className={`px-4 py-2 rounded-full text-sm border ${view==="carousel" ? "bg-zinc-900 text-white" : "bg-white"}`}>Karuzela</button>
-          <button onClick={() => setView("jalousie")} className={`px-4 py-2 rounded-full text-sm border ${view==="jalousie" ? "bg-zinc-900 text-white" : "bg-white"}`}>Żaluzje</button>
-          <span className="ml-auto text-xs text-zinc-500">Żaluzje = kategorie jako rozwijane listwy</span>
+        {/* explorer chooser - colorful */}
+        <div className="bg-white border rounded-2xl p-3 mb-4">
+          <div className="text-sm font-semibold mb-2">Jak chcesz przeglądać? <span className="font-normal text-zinc-500">— wybierz styl</span></div>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => setView("carousel")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="carousel" ? "bg-brand text-white border-brand shadow" : "bg-white hover:bg-zinc-50"}`}>🎠 Karuzela</button>
+            <button onClick={() => setView("jalousie")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="jalousie" ? "bg-zinc-900 text-white border-zinc-900 shadow" : "bg-white hover:bg-zinc-50"}`}>🪟 Żaluzje</button>
+            <button onClick={() => setView("quiz")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="quiz" ? "bg-sky-600 text-white border-sky-600 shadow" : "bg-sky-50 border-sky-200 text-sky-900 hover:bg-sky-100"}`}>🧭 Kreator — co chcesz?</button>
+            <button onClick={() => setView("camo")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="camo" ? "bg-amber-600 text-white border-amber-600 shadow" : "bg-amber-50 border-amber-200 text-amber-900 hover:bg-amber-100"}`}>🎨 Kolory / Kamuflaże</button>
+            <button onClick={() => setView("kits")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="kits" ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-transparent shadow" : "bg-emerald-50 border-emerald-200 text-emerald-900 hover:bg-emerald-100"}`}>🎯 Zestawy / Misje</button>
+          </div>
         </div>
 
         {view === "jalousie" ? (
           <Jalousie categories={categories} products={products} onAdd={addToCart} />
+        ) : view === "quiz" ? (
+          <QuizFinder products={products} onAdd={addToCart} />
+        ) : view === "camo" ? (
+          <CamoWall products={products} onAdd={addToCart} />
+        ) : view === "kits" ? (
+          <KitsView products={products} onAdd={addToCart} />
         ) : (
           <div className="grid lg:grid-cols-[280px_1fr] gap-6">
             <CategorySidebar selected={cat} onSelect={setCat} />
