@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root { color-scheme: light; }
-body { @apply bg-white text-zinc-800 antialiased; font-family: Inter, system-ui, sans-serif; }
+body { @apply bg-[#fafaf9] text-zinc-800 antialiased; font-family: Inter, system-ui, sans-serif; }
+h1,h2,h3 { font-family: 'Playfair Display', serif; }
+::selection { background: #0e7a5a; color: white; }

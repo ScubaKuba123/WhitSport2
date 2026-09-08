@@ -11,23 +11,24 @@ import type { Announcement, Category, Product } from "./types";
 function CategorySidebar({ selected, onSelect }: { selected: string | null; onSelect: (id: string | null) => void }) {
   const { categories, products } = useStore();
   return (
-    <aside className="border rounded-2xl p-3 bg-white h-fit">
-      <div className="font-semibold mb-2">Kategorie</div>
-      <button onClick={() => onSelect(null)} className={`w-full text-left px-3 py-2 rounded-xl flex justify-between ${selected === null ? "bg-brand text-white" : "hover:bg-zinc-50"}`}>
-        <span>Wszystkie</span><span className="text-xs opacity-60">{products.length}</span>
+    <aside className="border rounded-2xl p-3 bg-white h-fit shadow-sm">
+      <div className="font-semibold mb-2 tracking-tight">Kategorie</div>
+      <button onClick={() => onSelect(null)} className={`w-full text-left px-3 py-2.5 rounded-xl flex justify-between items-center text-sm font-medium transition ${selected === null ? "bg-brand text-white shadow" : "hover:bg-zinc-50 border border-transparent hover:border-zinc-200"}`}>
+        <span>Wszystkie</span><span className={`text-xs px-2 py-0.5 rounded-full ${selected===null?"bg-white/20":"bg-zinc-900 text-white"}`}>{products.length}</span>
       </button>
       {categories.map(c => {
         const count = products.filter(p => p.categoryId === c.id).length;
+        const active = selected === c.id;
         return (
-          <div key={c.id} className="mt-1">
-            <button onClick={() => onSelect(c.id)} className={`w-full text-left px-3 py-2 rounded-xl flex justify-between ${selected === c.id ? "bg-brand text-white" : "hover:bg-zinc-50"}`}>
-              <span>{c.name}</span><span className="text-xs opacity-60">{count}</span>
+          <div key={c.id} className="mt-1.5">
+            <button onClick={() => onSelect(c.id)} className={`w-full text-left px-3 py-2.5 rounded-xl flex justify-between items-center text-sm font-medium transition ${active ? "bg-zinc-900 text-white shadow" : "hover:bg-zinc-50 border border-zinc-200"}`}>
+              <span>{c.name}</span><span className={`text-xs px-2 py-0.5 rounded-full ${active?"bg-white text-zinc-900":"bg-zinc-100"}`}>{count}</span>
             </button>
             {c.subcategories.length > 0 && (
-              <div className="ml-4 mt-1 space-y-1">
+              <div className="ml-3 mt-1 space-y-0.5 border-l border-zinc-200 pl-3">
                 {c.subcategories.map(sc => {
                   const scCount = products.filter(p => p.subcategoryId === sc.id).length;
-                  return <div key={sc.id} className="text-sm text-zinc-600 flex justify-between px-2 py-1"><span>— {sc.name}</span><span className="text-xs">{scCount}</span></div>;
+                  return <div key={sc.id} className="text-sm text-zinc-600 flex justify-between py-1"><span className="hover:text-brand cursor-pointer">— {sc.name}</span><span className="text-xs bg-zinc-100 px-1.5 py-0.5 rounded-full">{scCount}</span></div>;
                 })}
               </div>
             )}
@@ -277,17 +278,40 @@ export default function App() {
   }, 0);
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50">
+    <div className="min-h-screen flex flex-col bg-[#fcfcfa]">
       <Header onAdmin={() => setAdmin(true)} />
-      <main className="max-w-[1280px] mx-auto w-full px-4 py-6 flex-1">
+      {/* HERO — high-end */}
+      <section className="relative overflow-hidden border-b bg-white">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(14,122,90,0.08),transparent_60%),radial-gradient(ellipse_at_bottom_right,_rgba(245,158,11,0.06),transparent_50%)]" />
+        <div className="max-w-[1280px] mx-auto px-4 py-8 md:py-10 grid md:grid-cols-[1.15fr_0.85fr] gap-6 items-center relative">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-zinc-900 text-white text-xs px-3 py-1.5 rounded-full font-medium">● Manufaktura Tarnowskie Góry — od biczów do Cordury IRR</div>
+            <h1 className="text-3xl md:text-4xl font-bold leading-tight mt-3 tracking-tight">Rzemieślnicza precyzja.<br /><span className="text-brand">Taktyczna funkcjonalność.</span></h1>
+            <p className="text-sm text-zinc-600 mt-3 max-w-[560px]">Każdy pas i ładownica szyte ręcznie z Cordury 500D Miranda, taśm Pasamon i okuć ITW Nexus. Sprawdź w karuzeli, żaluzjach lub kreatorze — wybierz kolor IRR i stan magazynowy live.</p>
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => document.getElementById('shop')?.scrollIntoView({behavior:'smooth'})} className="bg-zinc-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-black transition">Zobacz ofertę</button>
+              <a href="https://www.instagram.com/whip_sport.pl/" target="_blank" className="border bg-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-zinc-50 transition">Warsztat na IG →</a>
+            </div>
+            <div className="flex gap-4 mt-4 text-xs text-zinc-500"><span>✔ IRR ✓</span><span>✔ Pasamon PA</span><span>✔ Amann</span><span>✔ Do wyczerpania</span></div>
+          </div>
+          <div className="relative">
+            <img src="https://picsum.photos/seed/workshopatelier/800/520" alt="Pracownia" className="w-full h-[280px] md:h-[320px] object-cover rounded-3xl shadow-xl ring-1 ring-zinc-200" />
+            <div className="absolute -bottom-4 -left-4 bg-white border rounded-2xl p-3 shadow-lg flex gap-3 items-center">
+              <img src="/insta-logo.jpg" alt="" className="w-10 h-10 rounded-xl object-cover" />
+              <div><div className="text-xs font-bold leading-none">WHIP-SPORT.PL</div><div className="text-xs text-zinc-500">Sebastian Zawadzki • 42-600 TG</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <main id="shop" className="max-w-[1280px] mx-auto w-full px-4 py-6 flex-1">
         {/* announcements - vivid but airy */}
         <section id="news" className="mb-6">
-          <div className="flex items-center gap-2 mb-3"><div className="w-1 h-5 bg-brand rounded-full" /><div className="font-bold">Ogłoszenia</div><span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium">parafialne</span></div>
+          <div className="flex items-center gap-2 mb-3"><div className="w-1 h-5 bg-brand rounded-full" /><div className="font-bold tracking-tight">Ogłoszenia</div><span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium">parafialne</span><span className="ml-auto text-xs text-zinc-500">Moderowane w panelu admina</span></div>
           <div className="grid md:grid-cols-3 gap-3">
             {announcements.map((a, i) => {
               const accents = ["border-l-amber-500 bg-amber-50/60", "border-l-sky-500 bg-sky-50/60", "border-l-emerald-500 bg-emerald-50/60"];
               return (
-                <div key={a.id} className={`bg-white border rounded-2xl p-3.5 border-l-4 shadow-sm hover:shadow-md transition ${accents[i % 3]}`}>
+                <div key={a.id} className={`bg-white border rounded-2xl p-3.5 border-l-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition ${accents[i % 3]}`}>
                   <div className="text-xs font-mono text-zinc-500">{a.date}</div>
                   <div className="font-bold text-sm mt-1 leading-tight">{a.title}</div>
                   <div className="text-sm text-zinc-700 mt-1 line-clamp-3">{a.content}</div>
