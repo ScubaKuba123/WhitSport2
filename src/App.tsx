@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Carousel from "./components/Carousel";
 import { useStore } from "./context/StoreContext";
 import type { Announcement, Category, Product } from "./types";
 
@@ -197,9 +198,7 @@ export default function App() {
               <button onClick={() => setShowCart(true)} className="border bg-white px-4 py-2 rounded-full text-sm">Koszyk: {cart.length} • {cartTotal} zł</button>
             </div>
             {filtered.length === 0 ? <div className="text-sm text-zinc-500 border rounded-xl p-8 text-center bg-white">Brak produktów w tej kategorii — dodaj w panelu admina.</div> : (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => addToCart(p.id)} />)}
-              </div>
+              <Carousel>{filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => addToCart(p.id)} />)}</Carousel>
             )}
           </div>
         </div>

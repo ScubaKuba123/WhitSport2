@@ -17,10 +17,10 @@ export default function Header({ onAdmin }: { onAdmin: () => void }) {
       <div className="border-b border-zinc-200">
         <div className="max-w-[1280px] mx-auto px-4 py-3 flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand text-white grid place-items-center font-bold">W-S</div>
+            <img src="/logo-whip-sport.svg" alt="WHIP-SPORT.PL" className="w-10 h-10 rounded-xl shadow" />
             <div>
               <div className="font-bold leading-none">WHIP-SPORT.PL</div>
-              <div className="text-xs text-zinc-500">Tarnowskie Góry • Pracownia taktyczna</div>
+              <div className="text-xs text-zinc-500">Tarnowskie Góry • Sklep Taktyczny</div>
             </div>
           </div>
           <nav className="hidden md:flex gap-4 ml-6 text-sm">
