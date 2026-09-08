@@ -5,38 +5,42 @@ export default function Header({ onAdmin }: { onAdmin: () => void }) {
   const count = cart.reduce((s, x) => s + x.qty, 0);
   return (
     <header className="sticky top-0 z-40 bg-white">
-      {/* mandatory notice */}
-      <div className="bg-zinc-900 text-white text-xs text-center py-2 px-2">
+      {/* top bar - high-end as per image */}
+      <div className="bg-[#4a5a3a] text-white text-xs flex items-center justify-between px-4 py-1.5">
+        <span className="hidden md:inline">🚚 Darmowa dostawa od 300 zł</span>
+        <span className="hidden md:inline">✦ Szyte w Polsce — małe serie</span>
+        <span className="hidden sm:inline">◆ Sprzęt, który ma swoje miejsce</span>
+        <span className="ml-auto">Kontakt: sklep@whip-sport.pl | {shippingBar}</span>
+      </div>
+      <div className="bg-zinc-900 text-white text-[11px] text-center py-1 px-2 tracking-wide">
         Sprzedaż prowadzona wyłącznie online. Nie prowadzimy sklepu stacjonarnego.
       </div>
-      {/* top thin shipping bar info - colorful */}
-      <div className="bg-gradient-to-r from-amber-100 via-brand-light to-teal-50 border-b border-amber-200 text-zinc-800 text-sm text-center py-2.5 px-3 flex items-center justify-center gap-2">
-        <span className="hidden sm:inline">🚚</span> {shippingBar} <span className="hidden sm:inline text-brand font-semibold">• IRR • Pasamon • ITW Nexus</span>
-      </div>
-      {/* main bar - high-end */}
-      <div className="border-b border-zinc-200/70 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-        <div className="max-w-[1280px] mx-auto px-4 py-3.5 flex items-center gap-5">
-          <div className="flex items-center gap-3.5">
-            <img src="/insta-logo.jpg" alt="WHIP-SPORT.PL" className="w-11 h-11 rounded-xl shadow-sm ring-1 ring-zinc-200 object-cover" onError={(e)=>{ (e.target as HTMLImageElement).src='/logo-whip-sport.svg'; }} />
+      {/* main bar - high-end as per image */}
+      <div className="border-b border-zinc-200/70 backdrop-blur supports-[backdrop-filter]:bg-white/90">
+        <div className="max-w-[1280px] mx-auto px-4 py-3 flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <img src="/insta-logo.jpg" alt="WHIP-SPORT.PL" className="w-10 h-10 rounded-lg shadow-sm ring-1 ring-zinc-200 object-cover" onError={(e)=>{ (e.target as HTMLImageElement).src='/logo-whip-sport.svg'; }} />
             <div>
-              <div className="font-bold leading-none tracking-tight text-[15px]">WHIP-SPORT.PL</div>
-              <div className="text-[11px] tracking-wide uppercase text-zinc-500 font-medium">Tarnowskie Góry • Sklep Taktyczny • Manufaktura</div>
+              <div className="font-bold leading-none tracking-tight">WHIP-SPORT.PL</div>
+              <div className="text-[10px] tracking-widest uppercase text-zinc-500 font-semibold">PRACOWNIA SPRZĘTU • OD 2015</div>
             </div>
           </div>
-          <nav className="hidden lg:flex gap-1 ml-8">
-            {[
-              ["O mnie","#about"],
-              ["Nowości","#news"],
-              ["Oferta","#offer"],
-              ["Kontakt","#contact"],
-            ].map(([label,href])=>(
-              <a key={label} href={href} className="px-3 py-2 rounded-full text-sm font-medium text-zinc-700 hover:bg-zinc-900 hover:text-white transition">{label}</a>
-            ))}
+          <nav className="hidden lg:flex gap-6 ml-10 text-sm font-semibold tracking-wide">
+            <a href="#offer" className="hover:text-brand">OFERTA</a>
+            <a href="#news" className="hover:text-brand">NOWOŚCI</a>
+            <a href="#workshop" className="hover:text-brand">WARSZTAT</a>
+            <a href="#about" className="hover:text-brand">O NAS</a>
+            <a href="#contact" className="hover:text-brand">KONTAKT</a>
           </nav>
-          <div className="ml-auto flex items-center gap-2">
-            <a href="https://www.instagram.com/whip_sport.pl/" target="_blank" className="hidden sm:inline-flex w-8 h-8 rounded-full border bg-white place-items-center justify-center hover:border-zinc-300 transition text-xs">IG</a>
-            <a href="https://www.youtube.com/@WhipFightingSportWFS" target="_blank" className="hidden sm:inline-flex w-8 h-8 rounded-full border bg-white place-items-center justify-center hover:border-zinc-300 transition text-xs">YT</a>
-            <button onClick={onAdmin} className="relative bg-zinc-900 text-white rounded-full px-5 py-2.5 text-sm font-medium hover:bg-black transition shadow-sm">Koszyk • {count}</button>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 bg-zinc-50 border rounded-full px-3 py-1.5">
+              <span className="text-zinc-400">⌕</span>
+              <input placeholder="Szukaj produktów..." className="bg-transparent outline-none text-sm w-32 placeholder:text-zinc-400" />
+            </div>
+            <a href="#" className="hidden sm:flex flex-col items-center text-xs leading-none gap-1 hover:text-brand"><span className="w-6 h-6 rounded-full border grid place-items-center">◯</span>Konto</a>
+            <button onClick={onAdmin} className="flex flex-col items-center text-xs leading-none gap-1 hover:text-brand">
+              <span className="relative w-6 h-6 rounded-full border grid place-items-center">🛒<span className="absolute -top-1.5 -right-1.5 bg-brand text-white text-[10px] w-4 h-4 rounded-full grid place-items-center">{count}</span></span> Koszyk
+            </button>
           </div>
         </div>
       </div>

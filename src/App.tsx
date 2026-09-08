@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Carousel from "./components/Carousel";
 import Jalousie from "./components/Jalousie";
+import InteractiveCatalog from "./components/InteractiveCatalog";
 import { useStore } from "./context/StoreContext";
 import type { Announcement, Category, Product } from "./types";
 
@@ -280,28 +281,9 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#fcfcfa]">
       <Header onAdmin={() => setAdmin(true)} />
-      {/* HERO — high-end */}
-      <section className="relative overflow-hidden border-b bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(14,122,90,0.08),transparent_60%),radial-gradient(ellipse_at_bottom_right,_rgba(245,158,11,0.06),transparent_50%)]" />
-        <div className="max-w-[1280px] mx-auto px-4 py-8 md:py-10 grid md:grid-cols-[1.15fr_0.85fr] gap-6 items-center relative">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-zinc-900 text-white text-xs px-3 py-1.5 rounded-full font-medium">● Manufaktura Tarnowskie Góry — od biczów do Cordury IRR</div>
-            <h1 className="text-3xl md:text-4xl font-bold leading-tight mt-3 tracking-tight">Rzemieślnicza precyzja.<br /><span className="text-brand">Taktyczna funkcjonalność.</span></h1>
-            <p className="text-sm text-zinc-600 mt-3 max-w-[560px]">Każdy pas i ładownica szyte ręcznie z Cordury 500D Miranda, taśm Pasamon i okuć ITW Nexus. Sprawdź w karuzeli, żaluzjach lub kreatorze — wybierz kolor IRR i stan magazynowy live.</p>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => document.getElementById('shop')?.scrollIntoView({behavior:'smooth'})} className="bg-zinc-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-black transition">Zobacz ofertę</button>
-              <a href="https://www.instagram.com/whip_sport.pl/" target="_blank" className="border bg-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-zinc-50 transition">Warsztat na IG →</a>
-            </div>
-            <div className="flex gap-4 mt-4 text-xs text-zinc-500"><span>✔ IRR ✓</span><span>✔ Pasamon PA</span><span>✔ Amann</span><span>✔ Do wyczerpania</span></div>
-          </div>
-          <div className="relative">
-            <img src="https://picsum.photos/seed/workshopatelier/800/520" alt="Pracownia" className="w-full h-[280px] md:h-[320px] object-cover rounded-3xl shadow-xl ring-1 ring-zinc-200" />
-            <div className="absolute -bottom-4 -left-4 bg-white border rounded-2xl p-3 shadow-lg flex gap-3 items-center">
-              <img src="/insta-logo.jpg" alt="" className="w-10 h-10 rounded-xl object-cover" />
-              <div><div className="text-xs font-bold leading-none">WHIP-SPORT.PL</div><div className="text-xs text-zinc-500">Sebastian Zawadzki • 42-600 TG</div></div>
-            </div>
-          </div>
-        </div>
+      {/* INTERAKTYWNY KATALOG — high-end hero from user image */}
+      <section className="max-w-[1280px] mx-auto w-full px-4 pt-6">
+        <InteractiveCatalog />
       </section>
       <main id="shop" className="max-w-[1280px] mx-auto w-full px-4 py-6 flex-1">
         {/* announcements - vivid but airy */}
