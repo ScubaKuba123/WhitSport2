@@ -181,37 +181,6 @@ function AdminPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
-function CamoWall({ products, onAdd }: { products: Product[]; onAdd: (id: string) => void }) {
-  const camos = ["Ranger Green IRR", "Wz.93 Pantera IRR", "MultiCam IRR", "Coyote Brown", "Czarny"];
-  const [filter, setFilter] = useState<string | null>(null);
-  const filtered = filter ? products.filter(p => p.camo === filter) : products;
-  const swatches: Record<string, string> = {
-    "Ranger Green IRR": "bg-[#3f4f3a]",
-    "Wz.93 Pantera IRR": "bg-[#4a5d3a] bg-[radial-gradient(circle_at_20%_30%,#5a724b_0_18%,transparent_18%),radial-gradient(circle_at_70%_70%,#2f3d26_0_14%,transparent_14%)]",
-    "MultiCam IRR": "bg-[#7a6a4b] bg-[linear-gradient(45deg,#6b5a3a_25%,transparent_25%)]",
-    "Coyote Brown": "bg-[#8b5a2b]",
-    "Czarny": "bg-zinc-900",
-  };
-  return (
-    <div>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
-        {camos.map(c => (
-          <button key={c} onClick={() => setFilter(filter === c ? null : c)} className={`h-24 rounded-2xl border-2 flex flex-col items-center justify-center gap-1 text-sm font-semibold shadow-sm hover:scale-[1.02] transition ${filter === c ? "ring-2 ring-brand border-brand" : "border-zinc-200"} ${swatches[c]} ${c === "Czarny" ? "text-white" : c === "Coyote Brown" ? "text-white" : "text-white"}`}>
-            <span className="drop-shadow">{c}</span><span className="text-xs font-normal opacity-80">{products.filter(p => p.camo === c).length} prod.</span>
-          </button>
-        ))}
-      </div>
-      <div className="flex gap-2 mb-3">
-        <button onClick={() => setFilter(null)} className={`px-3 py-1 rounded-full text-xs border ${!filter ? "bg-zinc-900 text-white" : "bg-white"}`}>Wszystkie kamuflaże</button>
-        {filter && <span className="text-sm text-zinc-600">Filtr: <b>{filter}</b> — {filtered.length} produktów</span>}
-      </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => onAdd(p.id)} />)}
-      </div>
-    </div>
-  );
-}
-
 function QuizFinder({ products, onAdd }: { products: Product[]; onAdd: (id: string) => void }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<{ use?: string; color?: string; need?: string }>({});
@@ -294,37 +263,13 @@ function QuizFinder({ products, onAdd }: { products: Product[]; onAdd: (id: stri
   );
 }
 
-function KitsView({ products, onAdd }: { products: Product[]; onAdd: (id: string) => void }) {
-  const kits = [
-    { title: "Zestaw Battle Belt Start", desc: "Pas + 2 ładownice + panel", filter: (p: Product) => ["p_belt", "p_cargo", "p_panel"].includes(p.id), color: "from-emerald-500 to-teal-600" },
-    { title: "Do wyczerpania", desc: "Ostatnie sztuki z Mirandy", filter: (p: Product) => p.status === "low_stock" || p.status === "out_of_stock", color: "from-amber-500 to-orange-600" },
-    { title: "Promocje", desc: "Obniżki i okazje", filter: (p: Product) => !!p.oldPrice, color: "from-red-500 to-pink-600" },
-    { title: "Szyte na zamówienie", desc: "Realizacja 1–2 dni", filter: (p: Product) => p.status === "made_to_order", color: "from-sky-500 to-blue-600" },
-  ];
-  const [sel, setSel] = useState(0);
-  const filtered = products.filter(kits[sel].filter);
-  return (
-    <div>
-      <div className="grid md:grid-cols-4 gap-3 mb-4">
-        {kits.map((k, i) => (
-          <button key={k.title} onClick={() => setSel(i)} className={`rounded-2xl p-4 text-left text-white bg-gradient-to-br ${k.color} ${sel === i ? "ring-2 ring-zinc-900 scale-[1.02]" : "opacity-90 hover:opacity-100"} transition shadow`}>
-            <div className="font-bold text-sm">{k.title}</div><div className="text-xs opacity-80">{k.desc}</div><div className="text-xs mt-1 bg-white/20 inline-block px-2 py-0.5 rounded-full">{products.filter(k.filter).length} prod.</div>
-          </button>
-        ))}
-      </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.length ? filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => onAdd(p.id)} />) : <div className="text-sm text-zinc-500 col-span-3 text-center py-8">Brak produktów w tym zestawie</div>}
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
   const { announcements, products, categories, addToCart, cart } = useStore();
   const [cat, setCat] = useState<string | null>(null);
   const [admin, setAdmin] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [view, setView] = useState<"carousel" | "jalousie" | "quiz" | "camo" | "kits">("jalousie");
+  const [view, setView] = useState<"carousel" | "jalousie" | "quiz">("carousel");
+  const [camoFilter, setCamoFilter] = useState<string | null>(null);
   const filtered = cat ? products.filter(p => p.categoryId === cat) : products;
   const cartTotal = cart.reduce((s, ci) => {
     const p = products.find(x => x.id === ci.productId);
@@ -335,51 +280,54 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-zinc-50">
       <Header onAdmin={() => setAdmin(true)} />
       <main className="max-w-[1280px] mx-auto w-full px-4 py-6 flex-1">
-        {/* announcements */}
-        <section id="news" className="bg-white border rounded-2xl p-4 mb-6">
-          <div className="font-bold mb-3">Ogłoszenia parafialne</div>
-          <div className="grid md:grid-cols-3 gap-4">
-            {announcements.map(a => (
-              <div key={a.id} className="border rounded-xl p-3 bg-amber-50/40">
-                <div className="text-xs text-zinc-500">{a.date}</div>
-                <div className="font-semibold text-sm">{a.title}</div>
-                <div className="text-sm text-zinc-700">{a.content}</div>
-              </div>
-            ))}
+        {/* announcements - vivid but airy */}
+        <section id="news" className="mb-6">
+          <div className="flex items-center gap-2 mb-3"><div className="w-1 h-5 bg-brand rounded-full" /><div className="font-bold">Ogłoszenia</div><span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium">parafialne</span></div>
+          <div className="grid md:grid-cols-3 gap-3">
+            {announcements.map((a, i) => {
+              const accents = ["border-l-amber-500 bg-amber-50/60", "border-l-sky-500 bg-sky-50/60", "border-l-emerald-500 bg-emerald-50/60"];
+              return (
+                <div key={a.id} className={`bg-white border rounded-2xl p-3.5 border-l-4 shadow-sm hover:shadow-md transition ${accents[i % 3]}`}>
+                  <div className="text-xs font-mono text-zinc-500">{a.date}</div>
+                  <div className="font-bold text-sm mt-1 leading-tight">{a.title}</div>
+                  <div className="text-sm text-zinc-700 mt-1 line-clamp-3">{a.content}</div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
-        {/* explorer chooser - colorful */}
-        <div className="bg-white border rounded-2xl p-3 mb-4">
-          <div className="text-sm font-semibold mb-2">Jak chcesz przeglądać? <span className="font-normal text-zinc-500">— wybierz styl</span></div>
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => setView("carousel")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="carousel" ? "bg-brand text-white border-brand shadow" : "bg-white hover:bg-zinc-50"}`}>🎠 Karuzela</button>
-            <button onClick={() => setView("jalousie")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="jalousie" ? "bg-zinc-900 text-white border-zinc-900 shadow" : "bg-white hover:bg-zinc-50"}`}>🪟 Żaluzje</button>
-            <button onClick={() => setView("quiz")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="quiz" ? "bg-sky-600 text-white border-sky-600 shadow" : "bg-sky-50 border-sky-200 text-sky-900 hover:bg-sky-100"}`}>🧭 Kreator — co chcesz?</button>
-            <button onClick={() => setView("camo")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="camo" ? "bg-amber-600 text-white border-amber-600 shadow" : "bg-amber-50 border-amber-200 text-amber-900 hover:bg-amber-100"}`}>🎨 Kolory / Kamuflaże</button>
-            <button onClick={() => setView("kits")} className={`px-4 py-2 rounded-full text-sm border font-medium ${view==="kits" ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-transparent shadow" : "bg-emerald-50 border-emerald-200 text-emerald-900 hover:bg-emerald-100"}`}>🎯 Zestawy / Misje</button>
+        {/* stylish minimal chooser - vivid but simple */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <div className="bg-white border rounded-full p-1 flex gap-1 shadow-sm">
+            <button onClick={() => setView("carousel")} className={`px-5 py-2 rounded-full text-sm font-semibold transition ${view==="carousel" ? "bg-brand text-white shadow" : "text-zinc-600 hover:bg-zinc-50"}`}>Karuzela</button>
+            <button onClick={() => setView("jalousie")} className={`px-5 py-2 rounded-full text-sm font-semibold transition ${view==="jalousie" ? "bg-zinc-900 text-white shadow" : "text-zinc-600 hover:bg-zinc-50"}`}>Żaluzje</button>
+            <button onClick={() => setView("quiz")} className={`px-5 py-2 rounded-full text-sm font-semibold transition ${view==="quiz" ? "bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow" : "text-sky-700 hover:bg-sky-50"}`}>✦ Kreator</button>
           </div>
+          {view !== "quiz" && (
+            <div className="ml-auto flex gap-1.5 flex-wrap">
+              {["Wszystkie", "Ranger Green IRR", "Pantera IRR", "MultiCam IRR", "Coyote Brown", "Czarny"].map(c => {
+                const active = c === "Wszystkie" ? !camoFilter : camoFilter === c;
+                const bg = c.includes("Ranger") ? "bg-[#3f4f3a] text-white border-[#3f4f3a]" : c.includes("Pantera") ? "bg-[#4a5d3a] text-white border-[#4a5d3a]" : c.includes("MultiCam") ? "bg-[#7a6a4b] text-white border-[#7a6a4b]" : c.includes("Coyote") ? "bg-[#8b5a2b] text-white border-[#8b5a2b]" : c.includes("Czarny") ? "bg-zinc-900 text-white border-zinc-900" : active ? "bg-brand text-white border-brand" : "bg-white border-zinc-200";
+                return <button key={c} onClick={() => setCamoFilter(c === "Wszystkie" ? null : c)} className={`px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm ${bg} hover:scale-[1.02] transition`}>{c}</button>;
+              })}
+            </div>
+          )}
         </div>
 
         {view === "jalousie" ? (
-          <Jalousie categories={categories} products={products} onAdd={addToCart} />
+          <Jalousie categories={categories} products={camoFilter ? products.filter(p => p.camo === camoFilter) : products} onAdd={addToCart} />
         ) : view === "quiz" ? (
           <QuizFinder products={products} onAdd={addToCart} />
-        ) : view === "camo" ? (
-          <CamoWall products={products} onAdd={addToCart} />
-        ) : view === "kits" ? (
-          <KitsView products={products} onAdd={addToCart} />
         ) : (
           <div className="grid lg:grid-cols-[280px_1fr] gap-6">
             <CategorySidebar selected={cat} onSelect={setCat} />
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="font-semibold">Produkty {cat ? `— ${cat}` : ""} <span className="text-zinc-500 font-normal">({filtered.length})</span></div>
-                <button onClick={() => setShowCart(true)} className="border bg-white px-4 py-2 rounded-full text-sm">Koszyk: {cart.length} • {cartTotal} zł</button>
+                <div className="font-semibold">Produkty {cat ? `— ${cat}` : ""} <span className="text-zinc-500 font-normal">({(camoFilter ? products.filter(p => p.camo === camoFilter) : filtered).length})</span></div>
+                <button onClick={() => setShowCart(true)} className="border bg-white px-4 py-2 rounded-full text-sm shadow-sm">Koszyk: {cart.length} • {cartTotal} zł</button>
               </div>
-              {filtered.length === 0 ? <div className="text-sm text-zinc-500 border rounded-xl p-8 text-center bg-white">Brak produktów w tej kategorii — dodaj w panelu admina.</div> : (
-                <Carousel>{filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => addToCart(p.id)} />)}</Carousel>
-              )}
+              {(() => { const list = camoFilter ? products.filter(p => p.camo === camoFilter && (!cat || p.categoryId === cat)) : filtered; return list.length === 0 ? <div className="text-sm text-zinc-500 border rounded-xl p-8 text-center bg-white">Brak produktów — zmień filtry.</div> : <Carousel>{list.map(p => <ProductCard key={p.id} p={p} onAdd={() => addToCart(p.id)} />)}</Carousel>; })()}
             </div>
           </div>
         )}
