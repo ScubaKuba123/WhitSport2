@@ -66,7 +66,7 @@ export const initialProducts: Product[] = [
     status: "in_stock",
     camo: "Ranger Green IRR",
     fabric: "Cordura 500D Miranda IRR",
-    image: "https://picsum.photos/seed/belt/600/600",
+    image: "https://images.unsplash.com/photo-1545896381-511289742368?w=600&h=600&fit=crop&q=80",
     description: "Szeroki pas bojowy MOLLE/PALS, taśmy Pasamon, klamra Cobra style, IRR.",
     specs: { Tkanina: "Miranda IRR", "Taśma": "Pasamon PA", "Klamra": "Duraflex", "Szwy": "Amann" }
   },
@@ -80,7 +80,7 @@ export const initialProducts: Product[] = [
     status: "low_stock",
     camo: "Wz.93 Pantera IRR",
     fabric: "Cordura 500D",
-    image: "https://picsum.photos/seed/cargo/600/600",
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop&q=80",
     description: "Cargo z drenażem, ciche uchwyty YKK, MOLLE.",
   },
   {
@@ -93,7 +93,7 @@ export const initialProducts: Product[] = [
     status: "made_to_order",
     camo: "Coyote Brown",
     fabric: "Taśma Pasamon",
-    image: "https://picsum.photos/seed/glove/600/600",
+    image: "https://images.unsplash.com/photo-1521991467908-2d3a4d65736e?w=600&h=600&fit=crop&q=80",
     description: "Lekki uchwyt z taśmy wojskowej, karabińczyk.",
   },
   {
@@ -107,7 +107,7 @@ export const initialProducts: Product[] = [
     status: "in_stock",
     camo: "Czarny",
     fabric: "Paracord 550",
-    image: "https://picsum.photos/seed/whip/600/600",
+    image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600&h=600&fit=crop&q=80",
     description: "Ręcznie pleciony bicz sportowy — flagowy wyrób pracowni.",
   },
   {
@@ -120,7 +120,7 @@ export const initialProducts: Product[] = [
     status: "made_to_order",
     camo: "Coyote Brown",
     fabric: "Cordura IRR",
-    image: "https://picsum.photos/seed/panel/600/600",
+    image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&h=600&fit=crop&q=80",
     description: "Panel na rzep, haft W-S, kontury tarczy.",
   },
   {
@@ -133,7 +133,7 @@ export const initialProducts: Product[] = [
     status: "in_stock",
     camo: "MultiCam IRR",
     fabric: "Cordura 500D",
-    image: "https://picsum.photos/seed/dump/600/600",
+    image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&h=600&fit=crop&q=80",
     description: "Lekki, składany, ściągacz + pętla.",
   },
 ];
