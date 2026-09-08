@@ -84,7 +84,7 @@ export default function InteractiveCatalog() {
 
         {/* center soldier - high-end */}
         <div className="relative bg-[#dbe6d5] overflow-hidden flex items-center justify-center">
-          <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=800&h=900&fit=crop&q=80" alt="soldier" className="absolute inset-0 w-full h-full object-cover object-top" />
+          <img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=800&h=900&fit=crop&q=80" alt="soldier" className="absolute inset-0 w-full h-full object-cover object-top" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-white/5" />
           {/* hotspots */}
           {hotspots.map(h => (
