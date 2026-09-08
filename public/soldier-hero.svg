@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" width="800" height="900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#87a8b8"/>
+      <stop offset="100%" stop-color="#dbe6d5"/>
+    </linearGradient>
+    <linearGradient id="mountain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5a6b5f"/>
+      <stop offset="100%" stop-color="#2f3d26"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="900" fill="url(#sky)"/>
+  <!-- mountains -->
+  <path d="M0 450 L200 280 L350 380 L500 250 L650 320 L800 280 L800 900 L0 900 Z" fill="url(#mountain)" opacity="0.9"/>
+  <path d="M0 500 L150 360 L300 420 L450 300 L600 380 L800 340 L800 900 L0 900 Z" fill="#3f4f3a" opacity="0.7"/>
+  <!-- forest -->
+  <path d="M0 700 L800 700 L800 900 L0 900 Z" fill="#2f3d26"/>
+  <!-- soldier silhouette - centered -->
+  <g transform="translate(400, 450)">
+    <!-- backpack -->
+    <rect x="-45" y="-80" width="90" height="110" rx="18" fill="#3a3a2e" stroke="#1a1a14" stroke-width="3"/>
+    <!-- body -->
+    <rect x="-38" y="-70" width="76" height="100" rx="12" fill="#4a5a3a" stroke="#2f3d26" stroke-width="2"/>
+    <!-- chest rig -->
+    <rect x="-32" y="-50" width="64" height="45" rx="6" fill="#3f4f3a" stroke="#1a1a14" stroke-width="1.5"/>
+    <rect x="-28" y="-42" width="20" height="14" rx="2" fill="#5a6b3a"/>
+    <rect x="8" y="-42" width="20" height="14" rx="2" fill="#5a6b3a"/>
+    <rect x="-28" y="-24" width="20" height="14" rx="2" fill="#5a6b3a"/>
+    <rect x="8" y="-24" width="20" height="14" rx="2" fill="#5a6b3a"/>
+    <!-- W-S patch -->
+    <rect x="-12" y="-58" width="24" height="14" rx="3" fill="#1a1a14" stroke="#8b9b7a" stroke-width="1"/>
+    <text x="0" y="-48" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="8" fill="#fff">W-S</text>
+    <!-- belt -->
+    <rect x="-42" y="12" width="84" height="18" rx="3" fill="#2f2f26" stroke="#1a1a14" stroke-width="1.5"/>
+    <rect x="-36" y="14" width="22" height="14" rx="2" fill="#4a5a3a"/>
+    <rect x="14" y="14" width="22" height="14" rx="2" fill="#4a5a3a"/>
+    <circle cx="0" cy="21" r="8" fill="#5a5a2b" stroke="#1a1a14" stroke-width="1"/>
+    <!-- legs -->
+    <rect x="-38" y="30" width="32" height="110" rx="8" fill="#4a5a3a" stroke="#2f3d26" stroke-width="2"/>
+    <rect x="6" y="30" width="32" height="110" rx="8" fill="#4a5a3a" stroke="#2f3d26" stroke-width="2"/>
+    <!-- kneepads -->
+    <rect x="-38" y="85" width="32" height="22" rx="6" fill="#1a1a14"/>
+    <rect x="6" y="85" width="32" height="22" rx="6" fill="#1a1a14"/>
+    <!-- head -->
+    <circle cx="0" cy="-95" r="28" fill="#2f2f26" stroke="#1a1a14" stroke-width="2"/>
+    <rect x="-22" y="-115" width="44" height="18" rx="4" fill="#1a1a14"/>
+    <rect x="-26" y="-102" width="52" height="14" rx="3" fill="#3a3a2e"/>
+    <!-- goggles -->
+    <rect x="-18" y="-98" width="36" height="12" rx="6" fill="#0a0a0a" stroke="#5a5a2b" stroke-width="1"/>
+    <!-- mask -->
+    <rect x="-16" y="-88" width="32" height="16" rx="4" fill="#1a1a14"/>
+  </g>
+</svg>
