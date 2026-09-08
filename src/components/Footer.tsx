@@ -3,8 +3,8 @@ export default function Footer() {
     <footer className="border-t mt-12 bg-zinc-50">
       <div className="max-w-[1280px] mx-auto px-4 py-8 grid md:grid-cols-4 gap-8 text-sm">
         <div>
-          <div className="flex items-center gap-2 mb-2"><img src="/logo-whip-sport.svg" alt="logo" className="w-8 h-8 rounded-lg" /><span className="font-bold">WHIP-SPORT.PL</span></div>
-          <div className="text-xs text-zinc-500">Sklep Taktyczny</div>
+          <div className="flex items-center gap-2 mb-2"><img src="/insta-logo.jpg" alt="logo" className="w-8 h-8 rounded-lg object-cover border border-zinc-200" onError={(e)=>{ (e.target as HTMLImageElement).src='/logo-whip-sport.svg'; }} /><span className="font-bold">WHIP-SPORT.PL</span></div>
+          <div className="text-xs text-zinc-500">Sklep Taktyczny • Tarnowskie Góry</div>
           <div>Sebastian Zawadzki</div>
           <div>ul. Niedziałkowskiego 79</div>
           <div>42-600 Tarnowskie Góry</div>

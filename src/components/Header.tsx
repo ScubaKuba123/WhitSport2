@@ -17,7 +17,7 @@ export default function Header({ onAdmin }: { onAdmin: () => void }) {
       <div className="border-b border-zinc-200">
         <div className="max-w-[1280px] mx-auto px-4 py-3 flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <img src="/logo-whip-sport.svg" alt="WHIP-SPORT.PL" className="w-10 h-10 rounded-xl shadow" />
+            <img src="/insta-logo.jpg" alt="WHIP-SPORT.PL" className="w-10 h-10 rounded-xl shadow object-cover border border-zinc-200" onError={(e)=>{ (e.target as HTMLImageElement).src='/logo-whip-sport.svg'; }} />
             <div>
               <div className="font-bold leading-none">WHIP-SPORT.PL</div>
               <div className="text-xs text-zinc-500">Tarnowskie Góry • Sklep Taktyczny</div>
