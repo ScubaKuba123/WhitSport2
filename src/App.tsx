@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Carousel from "./components/Carousel";
+import Jalousie from "./components/Jalousie";
 import { useStore } from "./context/StoreContext";
 import type { Announcement, Category, Product } from "./types";
 
@@ -161,10 +162,11 @@ function AdminPanel({ onClose }: { onClose: () => void }) {
 }
 
 export default function App() {
-  const { announcements, products, addToCart, cart } = useStore();
+  const { announcements, products, categories, addToCart, cart } = useStore();
   const [cat, setCat] = useState<string | null>(null);
   const [admin, setAdmin] = useState(false);
   const [showCart, setShowCart] = useState(false);
+  const [view, setView] = useState<"carousel" | "jalousie">("jalousie");
   const filtered = cat ? products.filter(p => p.categoryId === cat) : products;
   const cartTotal = cart.reduce((s, ci) => {
     const p = products.find(x => x.id === ci.productId);
@@ -189,19 +191,30 @@ export default function App() {
           </div>
         </section>
 
-        {/* main layout variant 1 + 2 */}
-        <div className="grid lg:grid-cols-[280px_1fr] gap-6">
-          <CategorySidebar selected={cat} onSelect={setCat} />
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div className="font-semibold">Produkty {cat ? `— ${cat}` : ""} <span className="text-zinc-500 font-normal">({filtered.length})</span></div>
-              <button onClick={() => setShowCart(true)} className="border bg-white px-4 py-2 rounded-full text-sm">Koszyk: {cart.length} • {cartTotal} zł</button>
-            </div>
-            {filtered.length === 0 ? <div className="text-sm text-zinc-500 border rounded-xl p-8 text-center bg-white">Brak produktów w tej kategorii — dodaj w panelu admina.</div> : (
-              <Carousel>{filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => addToCart(p.id)} />)}</Carousel>
-            )}
-          </div>
+        {/* view toggle */}
+        <div className="flex items-center gap-2 mb-4">
+          <div className="text-sm text-zinc-600">Widok:</div>
+          <button onClick={() => setView("carousel")} className={`px-4 py-2 rounded-full text-sm border ${view==="carousel" ? "bg-zinc-900 text-white" : "bg-white"}`}>Karuzela</button>
+          <button onClick={() => setView("jalousie")} className={`px-4 py-2 rounded-full text-sm border ${view==="jalousie" ? "bg-zinc-900 text-white" : "bg-white"}`}>Żaluzje</button>
+          <span className="ml-auto text-xs text-zinc-500">Żaluzje = kategorie jako rozwijane listwy</span>
         </div>
+
+        {view === "jalousie" ? (
+          <Jalousie categories={categories} products={products} onAdd={addToCart} />
+        ) : (
+          <div className="grid lg:grid-cols-[280px_1fr] gap-6">
+            <CategorySidebar selected={cat} onSelect={setCat} />
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="font-semibold">Produkty {cat ? `— ${cat}` : ""} <span className="text-zinc-500 font-normal">({filtered.length})</span></div>
+                <button onClick={() => setShowCart(true)} className="border bg-white px-4 py-2 rounded-full text-sm">Koszyk: {cart.length} • {cartTotal} zł</button>
+              </div>
+              {filtered.length === 0 ? <div className="text-sm text-zinc-500 border rounded-xl p-8 text-center bg-white">Brak produktów w tej kategorii — dodaj w panelu admina.</div> : (
+                <Carousel>{filtered.map(p => <ProductCard key={p.id} p={p} onAdd={() => addToCart(p.id)} />)}</Carousel>
+              )}
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
       {admin && <AdminPanel onClose={() => setAdmin(false)} />}
